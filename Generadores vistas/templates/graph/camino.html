@@ -1,38 +1,23 @@
 {% extends 'template.html' %}
 
 {% block content %}
-<!-- Contenedor principal centrado con tarjeta -->
-<div class="container d-flex justify-content-center p-4">
-    <div class="card bg-dark text-white w-75 p-4 shadow-lg">
+<!-- Contenedor principal con tarjeta de diseño futurista -->
+<div class="container p-4 d-flex flex-column align-items-center">
+    <div class="card text-white w-100 p-4 shadow-lg rounded-4 border-0" style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
         
-        <!-- Título centrado -->
-        <h1 class="text-center text-primary mb-4">Ejecutar Algoritmos de Grafos</h1>
+        <!-- Título animado -->
+        <h1 class="text-center text-info mb-4 fw-bold" style="text-shadow: 3px 3px 10px rgba(0,255,255,0.7); animation: fadeIn 1s ease-in-out;">
+            Algoritmos de Grafos 🔗
+        </h1>
 
-        <!-- Contenedor principal con dos columnas: BFS a la izquierda, Camino Corto a la derecha -->
-        <div class="row mb-4">
-            <!-- Sección de Ejecutar BFS (izquierda) -->
-            <div id="bfsSection" class="col-md-6">
-                <h2 class="text-center text-primary">Ejecutar DFS</h2>
-                <form id="bfsForm">
-                    <div class="mb-3">
-                        <label for="origen" class="form-label">Origen:</label>
-                        <select id="origen" name="origen" class="form-select bg-secondary text-white">
-                            {% for list in data %}
-                                <option value="{{ list.labelId }}">{{ list.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Ejecutar BFS</button>
-                </form>
-            </div>
-
-            <!-- Sección de Calcular Camino Corto (derecha) -->
-            <div id="caminoCortoSection" class="col-md-6">
-                <h2 class="text-center text-primary">Calcular Camino Corto</h2>
+        <!-- Sección de Calcular Camino Corto arriba -->
+        <div id="caminoCortoSection" class="mb-4 p-3 w-100">
+            <div class="p-4 rounded-3 shadow-lg" style="background: rgba(255, 255, 255, 0.1); border-left: 5px solid #ff9933;">
+                <h2 class="text-center text-light">Calcular Camino Corto 🛤</h2>
                 <form id="caminoCortoForm">
                     <div class="mb-3">
-                        <label for="origen" class="form-label">Origen:</label>
-                        <select id="origen" name="origen" class="form-select bg-secondary text-white">
+                        <label for="origenCorto" class="form-label">Origen:</label>
+                        <select id="origenCorto" name="origen" class="form-select bg-dark text-white border-0">
                             {% for list in data %}
                                 <option value="{{ list.labelId }}">{{ list.name }}</option>
                             {% endfor %}
@@ -40,7 +25,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="destino" class="form-label">Destino:</label>
-                        <select id="destino" name="destino" class="form-select bg-secondary text-white">
+                        <select id="destino" name="destino" class="form-select bg-dark text-white border-0">
                             {% for list in data %}
                                 <option value="{{ list.labelId }}">{{ list.name }}</option>
                             {% endfor %}
@@ -48,40 +33,52 @@
                     </div>
                     <div class="mb-3">
                         <label for="algoritmo" class="form-label">Algoritmo:</label>
-                        <select id="algoritmo" name="algoritmo" class="form-select bg-secondary text-white">
+                        <select id="algoritmo" name="algoritmo" class="form-select bg-dark text-white border-0">
                             <option value="1">Bellman-Ford</option>
                             <option value="2">Floyd-Warshall</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Calcular Camino Corto</button>
+                    <button type="submit" class="btn btn-warning w-100 fw-bold shadow">Calcular Camino Corto</button>
                 </form>
             </div>
         </div>
 
-        <!-- Mostrar resultados en el centro, debajo de los formularios -->
-        <div id="result" class="text-center d-none">
-            <h2 class="text-danger">Resultado:</h2>
+        <!-- Sección de Ejecutar DFS abajo -->
+        <div id="bfsSection" class="mb-4 p-3 w-100">
+            <div class="p-4 rounded-3 shadow-lg" style="background: rgba(255, 255, 255, 0.1); border-left: 5px solid #00e6e6;">
+                <h2 class="text-center text-light">Ejecutar DFS 🚀</h2>
+                <form id="bfsForm">
+                    <div class="mb-3">
+                        <label for="origenBFS" class="form-label">Origen:</label>
+                        <select id="origenBFS" name="origen" class="form-select bg-dark text-white border-0">
+                            {% for list in data %}
+                                <option value="{{ list.labelId }}">{{ list.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-info w-100 fw-bold shadow">Ejecutar DFS</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Mostrar resultados en el centro -->
+        <div id="result" class="text-center d-none p-3 rounded w-100 d-flex flex-column align-items-center justify-content-center" style="background: rgba(0,0,0,0.3); border: 2px solid #00e6e6;">
+            <h2 class="text-danger">🔍 Resultado:</h2>
             <p id="resultadoText" class="text-light"></p>
         </div>
     </div>
 </div>
 
 <script>
-    // BFS Form Submission
     document.getElementById("bfsForm").addEventListener("submit", function(event) {
         event.preventDefault();
-        const origen = document.getElementById("origen").value;
+        const origen = document.getElementById("origenBFS").value;
 
         fetch(`/dfs/${origen}`)
             .then(response => response.json())
             .then(data => {
-                if (data) {
-                    document.getElementById("resultadoText").textContent = data.respuesta;
-                    document.getElementById("result").classList.remove("d-none");
-                } else {
-                    document.getElementById("resultadoText").textContent = "Error: No se pudo ejecutar BFS.";
-                    document.getElementById("result").classList.remove("d-none");
-                }
+                document.getElementById("resultadoText").textContent = data.respuesta || "Error: No se pudo ejecutar DFS.";
+                document.getElementById("result").classList.remove("d-none");
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -90,23 +87,17 @@
             });
     });
 
-    // Camino Corto Form Submission
     document.getElementById("caminoCortoForm").addEventListener("submit", function(event) {
         event.preventDefault();
-        const origen = document.getElementById("origen").value;
+        const origen = document.getElementById("origenCorto").value;
         const destino = document.getElementById("destino").value;
         const algoritmo = document.getElementById("algoritmo").value;
 
         fetch(`/caminocorto/${origen}/${destino}/${algoritmo}`)
             .then(response => response.json())
             .then(data => {
-                if (data.msg === "Camino corto calculado exitosamente") {
-                    document.getElementById("resultadoText").textContent = data.resultado;
-                    document.getElementById("result").classList.remove("d-none");
-                } else {
-                    document.getElementById("resultadoText").textContent = "Error: " + data.msg;
-                    document.getElementById("result").classList.remove("d-none");
-                }
+                document.getElementById("resultadoText").textContent = data.resultado || "Error: " + data.msg;
+                document.getElementById("result").classList.remove("d-none");
             })
             .catch(error => {
                 console.error('Error:', error);

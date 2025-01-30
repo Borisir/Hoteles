@@ -2,44 +2,42 @@
 
 {% block content %}
 <div class="text-center mb-4">
-    <h1 class="h3 text-primary">Adyacencias Aleatorias</h1>
-    <button id="nuevaAdyacencia" class="btn btn-primary mt-3">
-        Nueva Adyacencia
-    </button>
+    <h1 class="h3 text-info" style="text-shadow: 2px 2px 5px rgba(0,255,255,0.7);">Adyacencias Aleatorias</h1>
 </div>
 
-<div class="pb-4 container">
-    <table id="tabla" class="table table-bordered table-dark w-75 mx-auto">
-        <thead class="thead-primary">
-            <tr>
-                <th class="text-center">-----</th>
-                {% for item in lista %}
-                    <th class="text-center">{{ item.name }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in lista %}
-                <tr>
-                    <td class="font-weight-bold text-center">{{ item.name }}</td>
-                    {% for otro_item in lista %}
-                        <td class="text-center">
-                            {% set found = false %}
-                            {% for destino in item.destinations %}
-                                {% if destino.to == otro_item.labelId %}
-                                    <span class="text-primary">{{ destino.weight }}</span>
-                                    {% set found = true %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if not found %}
-                                <span class="text-muted">---</span>
-                            {% endif %}
-                        </td>
+<div class="pb-4 container d-flex flex-column align-items-center">
+    <div class="card p-4 rounded-4 shadow-lg border-0 w-100" style="background: linear-gradient(135deg, #1c1c1c, #343a40);">
+        <table id="tabla" class="table table-bordered table-dark text-center rounded-3 overflow-hidden">
+            <thead class="thead-light">
+                <tr style="background: rgba(255, 255, 255, 0.1);">
+                    <th class="text-warning">Nodo</th>
+                    {% for item in lista %}
+                        <th class="text-info">{{ item.name }}</th>
                     {% endfor %}
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for item in lista %}
+                    <tr>
+                        <td class="fw-bold text-warning">{{ item.name }}</td>
+                        {% for otro_item in lista %}
+                            <td class="text-center" style="background: rgba(255, 255, 255, 0.1);">
+                                {% set found = false %}
+                                {% for destino in item.destinations %}
+                                    {% if destino.to == otro_item.labelId %}
+                                        <span class="text-info fw-bold">{{ destino.weight }}</span>
+                                        {% set found = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button id="nuevaAdyacencia" class="btn btn-warning mt-4 fw-bold shadow-lg">Nueva Adyacencia</button>
 </div>
 
 <script>

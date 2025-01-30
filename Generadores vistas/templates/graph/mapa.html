@@ -1,80 +1,84 @@
 {% extends 'template.html' %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa de Grafos</title>
-    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <style>
-        /* Estilo para el contenedor del mapa */
-        #mynetwork {
-            width: 90%; /* Ancho del contenedor del grafo, ocupando el 90% del ancho de la página */
-            height: 600px; /* Altura del contenedor */
-            border: 3px solid lightgray; /* Borde del contenedor en color gris claro */
-        }
+<div class="text-center mb-2">
+    <h1 class="h3 text-info" style="text-shadow: 2px 2px 5px rgba(0,255,255,0.7);">Adyacencias Aleatorias</h1>
+</div>
 
-        /* Estilo para el título */
-        h2 {
-            text-align: center; /* Centra el texto del título */
-            margin-top: 30px; /* Espaciado superior de 30px */
-        }
-    </style>
-</head>
-<body>
-    <h2>Visualización del Grafo</h2>
-    <div id="mynetwork"></div>
+<div class="pb-4 container d-flex flex-column align-items-center">
+    <div class="card p-4 rounded-4 shadow-lg border-0 w-100" style="background: linear-gradient(135deg, #1e1e2f, #2a2a3a);">
+        <div id="mynetwork" class="rounded-3 shadow-lg" style="width: 100%; height: 500px; background: rgba(255, 255, 255, 0.15); border: 3px solid #00b3b3;"></div>
+    </div>
+    <button id="nuevaAdyacencia" class="btn btn-warning mt-4 fw-bold shadow-lg">Nueva Adyacencia</button>
+</div>
 
-    <script>
-        // Asegúrate de que los datos estén correctamente formateados en JSON
-        const graphData = JSON.parse('{{ graph_data | tojson | safe }}'); // Convierte los datos del grafo en formato JSON
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script>
+    document.getElementById("nuevaAdyacencia").addEventListener("click", function() {
+        fetch('/nuevaadyacencia', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
 
-        if (graphData && graphData.nodes && graphData.edges) {
-            // Crear un conjunto de nodos con las propiedades adecuadas
-            const nodes = new vis.DataSet(graphData.nodes.map(node => ({
-                id: node.id,
-                label: node.name, // Utiliza el campo 'name' del nodo como la etiqueta
-                size: 80, // Tamaño fijo de los nodos
-                shape: 'ellipse', // Forma del nodo (elíptica)
-            })));
+    const graphData = JSON.parse('{{ graph_data | tojson | safe }}');
 
-            // Crear un conjunto de aristas con las propiedades adecuadas
-            const edges = new vis.DataSet(graphData.edges.map(edge => ({
-                from: edge.from,
-                to: edge.to,
-                label: edge.weight.toString(), // Etiqueta de la arista, usando el peso como texto
-                font: { size: 14, align: 'top' }, // Tamaño de la fuente de la etiqueta de la arista
-                width: 2, // Grosor de las aristas
-            })));
+    if (graphData && graphData.nodes && graphData.edges) {
+        const nodes = new vis.DataSet(graphData.nodes.map(node => ({
+            id: node.id,
+            label: node.name,
+            size: 40,
+            shape: 'ellipse',
+            color: { background: '#00b3b3', border: '#ffffff', highlight: { background: '#ff8800', border: '#ffffff' } }
+        })));
 
-            // Opciones para la visualización del grafo
-            const container = document.getElementById('mynetwork'); // Obtiene el contenedor donde se dibujará el grafo
-            const data = { nodes, edges }; // Datos para el grafo (nodos y aristas)
+        const edges = new vis.DataSet(graphData.edges.map(edge => ({
+            from: edge.from,
+            to: edge.to,
+            label: edge.weight.toString(),
+            font: { size: 14, color: '#ffffff', align: 'top' },
+            width: 3,
+            color: { color: '#ff8800', highlight: '#ffffff' }
+        })));
 
-            const options = { 
-                nodes: {
-                    shape: "ellipse", // Forma de los nodos (elíptica)
-                    size: 30, // Tamaño predeterminado de los nodos
-                },
-                physics: {
-                    enabled: true, // Habilita el modelo físico para la simulación del grafo
-                    barnesHut: {
-                        gravitationalConstant: -5000, // Fuerza gravitacional negativa para separar los nodos
-                        centralGravity: 0.1, // Gravedad central que afecta la posición de los nodos
-                        springLength: 240, // Longitud de los resortes entre los nodos (a mayor valor, mayor separación)
-                        springConstant: 0.024, // Constante del resorte para la fuerza de repulsión entre nodos
-                    }
+        const container = document.getElementById('mynetwork');
+        const data = { nodes, edges };
+
+        const options = {
+            nodes: {
+                shape: "ellipse",
+                size: 40,
+                font: { color: '#ffffff', size: 16, face: 'Arial' }
+            },
+            edges: {
+                smooth: { type: 'dynamic' }
+            },
+            physics: {
+                enabled: true,
+                barnesHut: {
+                    gravitationalConstant: -5000,
+                    centralGravity: 0.2,
+                    springLength: 220,
+                    springConstant: 0.03
                 }
-            };
+            },
+            layout: {
+                improvedLayout: true
+            },
+            interaction: {
+                hover: true
+            }
+        };
 
-            // Crea la red de nodos y aristas en el contenedor especificado con las opciones definidas
-            new vis.Network(container, data, options);
-        } else {
-            console.error("Error: No se encontraron datos de grafo");
-        }
-    </script>
-</body>
-</html>
+        new vis.Network(container, data, options);
+    } else {
+        console.error("Error: No se encontraron datos de grafo");
+    }
+</script>
 {% endblock %}
