@@ -1,11 +1,9 @@
 {% extends 'template.html' %}
 
 {% block content %}
-<!-- Contenedor principal con tarjeta de diseño futurista -->
 <div class="container p-4 d-flex flex-column align-items-center">
     <div class="card text-white w-100 p-4 shadow-lg rounded-4 border-0" style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
         
-        <!-- Título animado -->
         <h1 class="text-center text-info mb-4 fw-bold" style="text-shadow: 3px 3px 10px rgba(0,255,255,0.7); animation: fadeIn 1s ease-in-out;">
             Algoritmos de Grafos 🔗
         </h1>
@@ -61,7 +59,6 @@
             </div>
         </div>
 
-        <!-- Mostrar resultados en el centro -->
         <div id="result" class="text-center d-none p-3 rounded w-100 d-flex flex-column align-items-center justify-content-center" style="background: rgba(0,0,0,0.3); border: 2px solid #00e6e6;">
             <h2 class="text-danger">🔍 Resultado:</h2>
             <p id="resultadoText" class="text-light"></p>

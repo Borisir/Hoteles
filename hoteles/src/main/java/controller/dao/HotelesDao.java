@@ -116,18 +116,29 @@ public String caminoCorto(int origen, int destino, int algoritmo) throws Excepti
     if (graph == null) {
         throw new Exception("Grafo no existe");
     }
+
+    System.out.println("Calculando camino corto desde " + origen + " hasta " + destino);
+
+    long startTime = System.nanoTime(); // Iniciar medición de tiempo
+
     String recorrido = "";
 
     if (algoritmo == 1) { // Usar algoritmo de Floyd
         BellmanFord bellmanFord = new BellmanFord(graph, origen, destino);
-        recorrido = bellmanFord.caminoCorto(); 
+        recorrido = bellmanFord.caminoCorto();
     } else { 
         Floyd floydWarshall = new Floyd(graph, origen, destino);
-        recorrido = floydWarshall.caminoCorto(); 
+        recorrido = floydWarshall.caminoCorto();
     }
-    return recorrido; 
 
+    long endTime = System.nanoTime(); // Finalizar medición de tiempo
+    long durationNano = endTime - startTime; // Duración en nanosegundos
+
+    System.out.println("Tiempo de ejecución: " + durationNano + " ns");
+
+    return recorrido + "\nTiempo de ejecución: " + durationNano + " ns";
 }
+
 
 public String dFS(int origen) throws Exception {
     if (graph == null) {

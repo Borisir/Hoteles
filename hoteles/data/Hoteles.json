@@ -78,37 +78,6 @@
         "ciudad": "Cuenca",
         "latitud": -2.900128,
         "longitud": -79.004531
-    },
-    {
-        "idHotel": 11,
-        "nombre": "Hotel Plaza Grande",
-        "habitaciones": "15",
-        "ciudad": "Quito",
-        "latitud": -0.220164,
-        "longitud": -78.512326
-    },
-    {
-        "idHotel": 12,
-        "nombre": "Mashpi Lodge",
-        "habitaciones": "24",
-        "ciudad": "Pacto",
-        "latitud": 0.150983,
-        "longitud": -78.874326
-    },
-    {
-        "idHotel": 13,
-        "nombre": "Finch Bay Galapagos Hotel",
-        "habitaciones": "27",
-        "ciudad": "Puerto Ayora",
-        "latitud": -0.748083,
-        "longitud": -90.31221
-    },
-    {
-        "idHotel": 14,
-        "nombre": "Hotel Oro Verde Guayaquil",
-        "habitaciones": "230",
-        "ciudad": "Guayaquil",
-        "latitud": -2.189108,
-        "longitud": -79.886654
     }
+    
 ]
